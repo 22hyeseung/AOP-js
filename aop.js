@@ -3,14 +3,26 @@ const TravelService = rawWebservice => {
   const maxArrival = new Date /* date */();
   const minDeparture = new Date /* date */();
 
+  const cache = [];
+
   return {
-    getSuggestedTicket: homeAirport =>
-      rawWebService.getCheapestRoundTrip(
+    getSuggestedTicket: homeAirport => {
+      let ticket;
+
+      if (cache[homeAirport])
+        return cache[homeAirport];
+
+      ticket = rawWebService.getCheapestRoundTrip(
         homeAirport,
         conferenceAirport,
         maxArrival,
         minDeparture
-      )
+      );
+
+      cache[homeAirport] = ticket;
+
+      return ticket;
+    }
   };
 };
 
